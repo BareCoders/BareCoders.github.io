@@ -1,12 +1,13 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>Host Monitor | 主机状态看板</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes" />
+    <title>Host Monitor · 毛玻璃头部</title>
+    <!-- Font Awesome 图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
+        /* ----- 全局重置 & 基础 ----- */
         * {
             margin: 0;
             padding: 0;
@@ -22,9 +23,16 @@
             align-items: center;
             justify-content: center;
             padding: 1rem;
+            background-size: 200% 200%;
+            animation: bgFlow 12s ease-in-out infinite alternate;
         }
 
-        /* 主卡片 */
+        @keyframes bgFlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        /* ----- 主卡片 ----- */
         .status-card {
             max-width: 680px;
             width: 100%;
@@ -35,69 +43,135 @@
             overflow: hidden;
             transition: all 0.2s ease;
             border: 1px solid rgba(255, 255, 255, 0.6);
+            animation: cardEntry 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both;
         }
 
-        /* 头部 */
+        @keyframes cardEntry {
+            0% {
+                opacity: 0;
+                transform: translateY(40px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* ===== 新头部：毛玻璃 + 浅蓝渐变 ===== */
         .card-header {
-            background: linear-gradient(135deg, #14222e 0%, #0f1a24 100%);
+            background: linear-gradient(135deg, #f0f5fe 0%, #ffffff 100%);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
             padding: 1.3rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 12px;
-            color: white;
+            color: #1e2a44;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 4px 12px rgba(0, 20, 40, 0.04);
+            position: relative;
+            overflow: hidden;
         }
+
+        /* 扫光动画 (调整后) */
+        .card-header::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 30%;
+            height: 200%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+            transform: rotate(25deg);
+            animation: shimmer 6s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -60%; }
+            100% { left: 120%; }
+        }
+
         .header-title {
             display: flex;
             align-items: center;
             gap: 10px;
+            position: relative;
+            z-index: 1;
         }
+
         .header-title i {
             font-size: 1.7rem;
-            color: #5ee0b5;
+            color: #3b82f6;
+            animation: iconPulse 2.4s ease-in-out infinite;
         }
+
+        @keyframes iconPulse {
+            0%, 100% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 0px #3b82f6);
+            }
+            50% {
+                transform: scale(1.12);
+                filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.3));
+            }
+        }
+
         .header-title h1 {
             font-size: 1.5rem;
             font-weight: 600;
             letter-spacing: -0.3px;
+            color: #0a1a2e;
         }
+
         .lang-switch {
-            background: rgba(255,255,255,0.15);
+            background: rgba(255, 255, 255, 0.7);
             border-radius: 40px;
-            padding: 0.3rem 0.6rem;
+            padding: 0.25rem 0.5rem;
             display: flex;
             gap: 6px;
             backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            position: relative;
+            z-index: 1;
         }
+
         .lang-btn {
             background: transparent;
             border: none;
-            color: #e0e7ff;
+            color: #2d4370;
             font-weight: 500;
             font-size: 0.8rem;
-            padding: 0.3rem 0.8rem;
+            padding: 0.3rem 0.9rem;
             border-radius: 30px;
             cursor: pointer;
             transition: all 0.2s;
         }
+
         .lang-btn.active {
             background: #ffffff;
             color: #0f212e;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 20, 40, 0.1);
         }
-        .lang-btn:active { transform: scale(0.96);}
 
-        /* 主体 */
+        .lang-btn:active {
+            transform: scale(0.96);
+        }
+        /* ===== 头部新样式结束 ===== */
+
+        /* ----- 卡片主体 ----- */
         .card-body {
             padding: 1.6rem 1.5rem 1.2rem 1.5rem;
         }
 
-        /* 状态大图标 */
+        /* ----- 状态指示器 ----- */
         .status-indicator {
             text-align: center;
             margin-bottom: 1.8rem;
         }
+
         .status-icon {
             display: inline-flex;
             width: 95px;
@@ -108,40 +182,73 @@
             justify-content: center;
             margin-bottom: 0.8rem;
             transition: 0.2s;
-            box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+            animation: floatIcon 3s ease-in-out infinite;
         }
+
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+
         .status-icon i {
             font-size: 3.5rem;
         }
+
         .status-text {
             font-size: 1.8rem;
             font-weight: 700;
             letter-spacing: -0.3px;
         }
+
         .status-sub {
             font-size: 0.8rem;
             color: #4a5b79;
             margin-top: 0.25rem;
         }
 
-        /* 状态颜色 */
-        .healthy .status-icon { background: #e0f7ec; }
-        .healthy .status-icon i { color: #2b7e3a; }
-        .healthy .status-text { color: #1f8b4c; }
+        /* 各状态配色 */
+        .healthy .status-icon {
+            background: #e0f7ec;
+        }
+        .healthy .status-icon i {
+            color: #2b7e3a;
+        }
+        .healthy .status-text {
+            color: #1f8b4c;
+        }
 
-        .degraded .status-icon { background: #fff1e0; }
-        .degraded .status-icon i { color: #e68a2e; }
-        .degraded .status-text { color: #c2571a; }
+        .degraded .status-icon {
+            background: #fff1e0;
+        }
+        .degraded .status-icon i {
+            color: #e68a2e;
+        }
+        .degraded .status-text {
+            color: #c2571a;
+        }
 
-        .down .status-icon { background: #ffe8e8; }
-        .down .status-icon i { color: #d83a3a; }
-        .down .status-text { color: #b91c1c; }
+        .down .status-icon {
+            background: #ffe8e8;
+        }
+        .down .status-icon i {
+            color: #d83a3a;
+        }
+        .down .status-text {
+            color: #b91c1c;
+        }
 
-        .checking .status-icon { background: #eef2ff; }
-        .checking .status-icon i { color: #3b82f6; }
-        .checking .status-text { color: #2563eb; }
+        .checking .status-icon {
+            background: #eef2ff;
+        }
+        .checking .status-icon i {
+            color: #3b82f6;
+        }
+        .checking .status-text {
+            color: #2563eb;
+        }
 
-        /* 指标网格 */
+        /* ----- 指标网格 ----- */
         .metrics-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -152,11 +259,24 @@
             margin: 1.2rem 0;
             border: 1px solid #eef2f8;
         }
+
         .metric-item {
             display: flex;
             align-items: center;
             gap: 0.7rem;
+            opacity: 0;
+            animation: metricFadeIn 0.5s ease forwards;
         }
+        .metric-item:nth-child(1) { animation-delay: 0.15s; }
+        .metric-item:nth-child(2) { animation-delay: 0.30s; }
+        .metric-item:nth-child(3) { animation-delay: 0.45s; }
+        .metric-item:nth-child(4) { animation-delay: 0.60s; }
+
+        @keyframes metricFadeIn {
+            0% { opacity: 0; transform: translateX(-10px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+
         .metric-icon {
             width: 40px;
             height: 40px;
@@ -167,12 +287,14 @@
             justify-content: center;
             color: #2c3e66;
             font-size: 1.2rem;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
             border: 1px solid #e2e9f2;
         }
+
         .metric-info {
             flex: 1;
         }
+
         .metric-label {
             font-size: 0.65rem;
             text-transform: uppercase;
@@ -180,18 +302,20 @@
             color: #5b6e8c;
             letter-spacing: 0.3px;
         }
+
         .metric-value {
             font-weight: 700;
             font-size: 1rem;
             color: #1e293b;
             word-break: break-word;
         }
+
         .small-value {
             font-size: 0.8rem;
             font-family: monospace;
         }
 
-        /* 操作区 + 自动刷新开关 */
+        /* ----- 操作面板 ----- */
         .action-panel {
             margin: 1rem 0 1.2rem 0;
             display: flex;
@@ -200,6 +324,7 @@
             justify-content: space-between;
             gap: 12px;
         }
+
         .btn-refresh {
             background: #ffffff;
             border: 1px solid #cbdde9;
@@ -212,10 +337,20 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            transition: 0.2s;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+            transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
         }
-        .btn-refresh:active { transform: scale(0.97); background: #f0f4fa;}
+
+        .btn-refresh:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            background: #f8faff;
+        }
+
+        .btn-refresh:active {
+            transform: scale(0.97);
+            background: #f0f4fa;
+        }
 
         .auto-toggle {
             display: flex;
@@ -228,6 +363,7 @@
             font-weight: 500;
             color: #1e2f3c;
         }
+
         .auto-toggle input {
             width: 36px;
             height: 20px;
@@ -238,9 +374,11 @@
             cursor: pointer;
             transition: 0.2s;
         }
+
         .auto-toggle input:checked {
             background: #2b7e3a;
         }
+
         .auto-toggle input::before {
             content: "";
             width: 16px;
@@ -252,9 +390,11 @@
             left: 2px;
             transition: 0.2s;
         }
+
         .auto-toggle input:checked::before {
             left: 18px;
         }
+
         .auto-label {
             user-select: none;
         }
@@ -267,6 +407,7 @@
             color: #3a5670;
             font-family: monospace;
         }
+
         .toast-msg {
             font-size: 0.7rem;
             background: #eef4ff;
@@ -276,7 +417,7 @@
             display: inline-block;
         }
 
-        /* 底部邮箱 */
+        /* ----- 底部 ----- */
         .footer-email {
             text-align: center;
             font-size: 0.75rem;
@@ -287,11 +428,33 @@
             font-family: monospace;
             letter-spacing: 0.3px;
         }
+
         .footer-email i {
             margin-right: 6px;
             font-size: 0.7rem;
         }
 
+        /* ----- 已有脉冲动画 (增强) ----- */
+        .healthy .status-icon {
+            animation: softPulse 1.8s infinite, floatIcon 3s ease-in-out infinite;
+        }
+
+        @keyframes softPulse {
+            0% { box-shadow: 0 0 0 0 rgba(43, 126, 58, 0.25); }
+            70% { box-shadow: 0 0 0 14px rgba(43, 126, 58, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(43, 126, 58, 0); }
+        }
+
+        .fa-spin {
+            animation: fa-spin 1s infinite linear;
+        }
+
+        @keyframes fa-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ----- 响应式 ----- */
         @media (max-width: 520px) {
             .card-body { padding: 1.2rem; }
             .status-text { font-size: 1.5rem; }
@@ -303,458 +466,456 @@
             .auto-toggle { justify-content: space-between; }
             .card-header { flex-direction: column; align-items: flex-start; }
         }
-
-        .healthy .status-icon { animation: softPulse 1.8s infinite; }
-        @keyframes softPulse {
-            0% { box-shadow: 0 0 0 0 rgba(43,126,58,0.2);}
-            70% { box-shadow: 0 0 0 10px rgba(43,126,58,0);}
-            100% { box-shadow: 0 0 0 0 rgba(43,126,58,0);}
-        }
-        .fa-spin { animation: fa-spin 1s infinite linear; }
-        @keyframes fa-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
+
 <body>
-<div class="status-card" id="statusCard">
-    <div class="card-header">
-        <div class="header-title">
-            <i class="fas fa-microchip"></i>
-            <h1 id="headerTitle">Host Monitor</h1>
+    <div class="status-card healthy" id="statusCard">
+        <!-- 头部 (新设计) -->
+        <div class="card-header">
+            <div class="header-title">
+                <i class="fas fa-microchip"></i>
+                <h1 id="headerTitle">Host Monitor</h1>
+            </div>
+            <div class="lang-switch">
+                <button class="lang-btn" data-lang="en" id="langEnBtn">EN</button>
+                <button class="lang-btn" data-lang="zh" id="langZhBtn">中文</button>
+            </div>
         </div>
-        <div class="lang-switch">
-            <button class="lang-btn" data-lang="en" id="langEnBtn">EN</button>
-            <button class="lang-btn" data-lang="zh" id="langZhBtn">中文</button>
+
+        <!-- 主体 -->
+        <div class="card-body">
+            <!-- 状态区 -->
+            <div class="status-indicator" id="statusIndicator">
+                <div class="status-icon" id="statusIcon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="status-text" id="statusMainText">All Systems Operational</div>
+                <div class="status-sub" id="statusSubText">Host / website is reachable and working normally.</div>
+            </div>
+
+            <!-- 指标网格 -->
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-icon"><i class="fas fa-globe"></i></div>
+                    <div class="metric-info">
+                        <div class="metric-label" id="labelHost">TARGET HOST</div>
+                        <div class="metric-value" id="hostnameValue">biz.ooo</div>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    <div class="metric-info">
+                        <div class="metric-label" id="labelLatency">RESPONSE TIME</div>
+                        <div class="metric-value" id="latencyValue">266 ms</div>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-icon"><i class="fas fa-code"></i></div>
+                    <div class="metric-info">
+                        <div class="metric-label" id="labelHttpStatus">HTTP STATUS</div>
+                        <div class="metric-value" id="httpStatusValue">✅ 200</div>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-icon"><i class="fas fa-clock"></i></div>
+                    <div class="metric-info">
+                        <div class="metric-label" id="labelLastCheck">LAST CHECK</div>
+                        <div class="metric-value small-value" id="lastCheckTime">--:--:--</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 操作栏 -->
+            <div class="action-panel">
+                <button class="btn-refresh" id="manualRefreshBtn">
+                    <i class="fas fa-sync-alt"></i>
+                    <span id="manualBtnText">Check Now</span>
+                </button>
+                <div class="auto-toggle">
+                    <span class="auto-label" id="autoToggleLabel">⏲️ Auto (1min)</span>
+                    <input type="checkbox" id="autoRefreshToggle" aria-label="Enable auto refresh" />
+                </div>
+                <div id="toastMsgArea" class="toast-msg">
+                    <i class="fas fa-info-circle"></i>
+                    <span id="toastText">Ready</span>
+                </div>
+            </div>
+
+            <div class="last-check-info" id="autoHintMessage">
+                <i class="fas fa-hand-pointer"></i>
+                <span id="autoHintSpan">🖱️ Manual mode (click refresh)</span>
+            </div>
+        </div>
+
+        <!-- 底部 -->
+        <div class="footer-email">
+            <!-- 留空，与原站一致 -->
         </div>
     </div>
-    <div class="card-body">
-        <!-- 动态状态区 -->
-        <div class="status-indicator" id="statusIndicator">
-            <div class="status-icon" id="statusIcon"><i class="fas fa-circle-notch fa-spin"></i></div>
-            <div class="status-text" id="statusMainText">Checking...</div>
-            <div class="status-sub" id="statusSubText">Verifying host availability</div>
-        </div>
 
-        <!-- 指标网格 -->
-        <div class="metrics-grid">
-            <div class="metric-item">
-                <div class="metric-icon"><i class="fas fa-globe"></i></div>
-                <div class="metric-info">
-                    <div class="metric-label" id="labelHost">TARGET HOST</div>
-                    <div class="metric-value" id="hostnameValue">--</div>
-                </div>
-            </div>
-            <div class="metric-item">
-                <div class="metric-icon"><i class="fas fa-tachometer-alt"></i></div>
-                <div class="metric-info">
-                    <div class="metric-label" id="labelLatency">RESPONSE TIME</div>
-                    <div class="metric-value" id="latencyValue">-- ms</div>
-                </div>
-            </div>
-            <div class="metric-item">
-                <div class="metric-icon"><i class="fas fa-code"></i></div>
-                <div class="metric-info">
-                    <div class="metric-label" id="labelHttpStatus">HTTP STATUS</div>
-                    <div class="metric-value" id="httpStatusValue">--</div>
-                </div>
-            </div>
-            <div class="metric-item">
-                <div class="metric-icon"><i class="fas fa-clock"></i></div>
-                <div class="metric-info">
-                    <div class="metric-label" id="labelLastCheck">LAST CHECK</div>
-                    <div class="metric-value small-value" id="lastCheckTime">--:--:--</div>
-                </div>
-            </div>
-        </div>
+    <script>
+        // ============================================================
+        //  完整功能脚本 (不变)
+        // ============================================================
 
-        <!-- 操作栏手动 + 自动开关 -->
-        <div class="action-panel">
-            <button class="btn-refresh" id="manualRefreshBtn">
-                <i class="fas fa-sync-alt"></i> <span id="manualBtnText">Check Now</span>
-            </button>
-            <div class="auto-toggle">
-                <span class="auto-label" id="autoToggleLabel">⏲️ Auto (1min)</span>
-                <input type="checkbox" id="autoRefreshToggle" aria-label="Enable auto refresh">
-            </div>
-            <div id="toastMsgArea" class="toast-msg"><i class="fas fa-info-circle"></i> <span id="toastText">Ready</span></div>
-        </div>
-        <div class="last-check-info" id="autoHintMessage">
-            <i class="fas fa-hand-pointer"></i> <span id="autoHintSpan">Manual mode</span>
-        </div>
-    </div>
-    <div class="footer-email">
-          <!-- footer-email -->
-      <!--   <i class="far fa-envelope"></i> Hello#DomainName.Plus   -->
-    </div>
-</div>
-
-<script>
-    // ------------------- 语言资源 -------------------
-    const translations = {
-        en: {
-            header: "Host Monitor",
-            // 状态动态词汇 (在updateUI里使用)
-            healthy_main: "All Systems Operational",
-            healthy_sub: "Host / website is reachable and working normally.",
-            degraded_main: "Degraded",
-            degraded_sub: "Service responds but status indicates redirection or warning.",
-            down_main: "Offline / Unreachable",
-            down_sub: "No response or connection failure, check your service.",
-            checking_main: "Checking...",
-            checking_sub: "Sending health probe request.",
-            // 指标标签
-            label_host: "TARGET HOST",
-            label_latency: "RESPONSE TIME",
-            label_http: "HTTP STATUS",
-            label_last: "LAST CHECK",
-            // 按钮和开关
-            manualBtn: "Check Now",
-            autoLabel: "⏲️ Auto (1min)",
-            toast_ready: "Ready",
-            toast_checking: "Probing host...",
-            toast_success: "✓ Reachable · HTTP {code}",
-            toast_redirect: "⚠️ Redirect ({code}) but online",
-            toast_error: "❌ HTTP {code} · Cannot open properly",
-            toast_fail: "❌ Connection failed: {reason}",
-            auto_hint_manual: "🖱️ Manual mode (click refresh)",
-            auto_hint_auto: "⏱️ Auto refresh every 1 minute",
-            check_ongoing: "Check in progress, please wait",
-        },
-        zh: {
-            header: "主机状态看板",
-            healthy_main: "全系统正常",
-            healthy_sub: "主机/网站可正常访问，服务在线。",
-            degraded_main: "部分异常",
-            degraded_sub: "服务可响应但状态码异常或重定向。",
-            down_main: "离线 / 不可达",
-            down_sub: "无响应或连接失败，请检查主机或网站。",
-            checking_main: "检测中...",
-            checking_sub: "正在发送健康检查请求。",
-            label_host: "目标主机",
-            label_latency: "响应时间",
-            label_http: "HTTP状态",
-            label_last: "上次检测",
-            manualBtn: "立即检测",
-            autoLabel: "⏲️ 自动 (1分钟)",
-            toast_ready: "就绪",
-            toast_checking: "正在探测主机...",
-            toast_success: "✓ 可达 · HTTP {code}",
-            toast_redirect: "⚠️ 重定向 ({code}) 但在线",
-            toast_error: "❌ HTTP {code} · 无法正常打开",
-            toast_fail: "❌ 连接失败: {reason}",
-            auto_hint_manual: "🖱️ 手动模式 (点击刷新)",
-            auto_hint_auto: "⏱️ 自动刷新 (每1分钟)",
-            check_ongoing: "检测进行中，请稍后",
-        }
-    };
-
-    let currentLang = 'en';   // 默认英文
-    let autoRefreshEnabled = false;   // 自动刷新开关
-    let autoTimer = null;
-    let isChecking = false;
-    
-    // 存储最近一次检测结果用于语言切换后刷新界面
-    let lastHealthState = 'checking';
-    let lastStatusCode = null;
-    let lastLatencyMs = null;
-    let lastResponseOkFlag = false;
-
-    // DOM 元素
-    const statusCardElem = document.getElementById('statusCard');
-    const statusIconDiv = document.getElementById('statusIcon');
-    const statusMainTextSpan = document.getElementById('statusMainText');
-    const statusSubTextSpan = document.getElementById('statusSubText');
-    const hostnameSpan = document.getElementById('hostnameValue');
-    const latencySpan = document.getElementById('latencyValue');
-    const httpStatusSpan = document.getElementById('httpStatusValue');
-    const lastCheckSpan = document.getElementById('lastCheckTime');
-    const manualBtn = document.getElementById('manualRefreshBtn');
-    const autoToggleCheck = document.getElementById('autoRefreshToggle');
-    const autoHintSpan = document.getElementById('autoHintSpan');
-    const toastMsgSpan = document.getElementById('toastText');
-    const manualBtnSpan = document.getElementById('manualBtnText');
-    const autoToggleLabelSpan = document.getElementById('autoToggleLabel');
-    
-    // 需要国际化的静态标签元素
-    const labelHostElem = document.getElementById('labelHost');
-    const labelLatencyElem = document.getElementById('labelLatency');
-    const labelHttpStatusElem = document.getElementById('labelHttpStatus');
-    const labelLastCheckElem = document.getElementById('labelLastCheck');
-    const headerTitleElem = document.getElementById('headerTitle');
-
-    // 当前目标主机
-    const TARGET_ORIGIN = window.location.origin;
-    const HOST_DISPLAY = window.location.hostname || 'localhost';
-    hostnameSpan.innerText = HOST_DISPLAY;
-
-    // 辅助提示 (国际化内容)
-    function showMessage(messageKey, params = {}) {
-        let template = translations[currentLang][messageKey] || messageKey;
-        if (params.code !== undefined) template = template.replace('{code}', params.code);
-        if (params.reason !== undefined) template = template.replace('{reason}', params.reason);
-        toastMsgSpan.innerText = template;
-        setTimeout(() => {
-            if (toastMsgSpan.innerText === template) {
-                toastMsgSpan.innerText = translations[currentLang].toast_ready;
+        const translations = {
+            en: {
+                header: "Host Monitor",
+                healthy_main: "All Systems Operational",
+                healthy_sub: "Host / website is reachable and working normally.",
+                degraded_main: "Degraded",
+                degraded_sub: "Service responds but status indicates redirection or warning.",
+                down_main: "Offline / Unreachable",
+                down_sub: "No response or connection failure, check your service.",
+                checking_main: "Checking...",
+                checking_sub: "Sending health probe request.",
+                label_host: "TARGET HOST",
+                label_latency: "RESPONSE TIME",
+                label_http: "HTTP STATUS",
+                label_last: "LAST CHECK",
+                manualBtn: "Check Now",
+                autoLabel: "⏲️ Auto (1min)",
+                toast_ready: "Ready",
+                toast_checking: "Probing host...",
+                toast_success: "✓ Reachable · HTTP {code}",
+                toast_redirect: "⚠️ Redirect ({code}) but online",
+                toast_error: "❌ HTTP {code} · Cannot open properly",
+                toast_fail: "❌ Connection failed: {reason}",
+                auto_hint_manual: "🖱️ Manual mode (click refresh)",
+                auto_hint_auto: "⏱️ Auto refresh every 1 minute",
+                check_ongoing: "Check in progress, please wait",
+            },
+            zh: {
+                header: "主机状态看板",
+                healthy_main: "全系统正常",
+                healthy_sub: "主机/网站可正常访问，服务在线。",
+                degraded_main: "部分异常",
+                degraded_sub: "服务可响应但状态码异常或重定向。",
+                down_main: "离线 / 不可达",
+                down_sub: "无响应或连接失败，请检查主机或网站。",
+                checking_main: "检测中...",
+                checking_sub: "正在发送健康检查请求。",
+                label_host: "目标主机",
+                label_latency: "响应时间",
+                label_http: "HTTP状态",
+                label_last: "上次检测",
+                manualBtn: "立即检测",
+                autoLabel: "⏲️ 自动 (1分钟)",
+                toast_ready: "就绪",
+                toast_checking: "正在探测主机...",
+                toast_success: "✓ 可达 · HTTP {code}",
+                toast_redirect: "⚠️ 重定向 ({code}) 但在线",
+                toast_error: "❌ HTTP {code} · 无法正常打开",
+                toast_fail: "❌ 连接失败: {reason}",
+                auto_hint_manual: "🖱️ 手动模式 (点击刷新)",
+                auto_hint_auto: "⏱️ 自动刷新 (每1分钟)",
+                check_ongoing: "检测进行中，请稍后",
             }
-        }, 2500);
-    }
+        };
 
-    // 根据当前语言更新UI上的静态文本
-    function updateStaticTexts() {
-        const t = translations[currentLang];
-        headerTitleElem.innerText = t.header;
-        labelHostElem.innerText = t.label_host;
-        labelLatencyElem.innerText = t.label_latency;
-        labelHttpStatusElem.innerText = t.label_http;
-        labelLastCheckElem.innerText = t.label_last;
-        manualBtnSpan.innerText = t.manualBtn;
-        autoToggleLabelSpan.innerText = t.autoLabel;
-        // 动态更新自动模式提示
-        if (autoRefreshEnabled) {
-            autoHintSpan.innerText = t.auto_hint_auto;
-        } else {
-            autoHintSpan.innerText = t.auto_hint_manual;
-        }
-        // 刷新当前状态区的文字 (基于上次健康状态)
-        refreshStatusTextByLastResult();
-    }
+        let currentLang = 'en';
+        let autoRefreshEnabled = false;
+        let autoTimer = null;
+        let isChecking = false;
 
-    // 根据保存的状态、码值、延迟重新渲染状态显示文字以及metric
-    function refreshStatusTextByLastResult() {
-        if (!lastHealthState) return;
-        const t = translations[currentLang];
-        let mainText = '', subText = '';
-        switch(lastHealthState) {
-            case 'healthy':
-                mainText = t.healthy_main;
-                subText = t.healthy_sub;
-                break;
-            case 'degraded':
-                mainText = t.degraded_main;
-                subText = t.degraded_sub;
-                break;
-            case 'down':
-                mainText = t.down_main;
-                subText = t.down_sub;
-                break;
-            default:
-                mainText = t.checking_main;
-                subText = t.checking_sub;
-        }
-        statusMainTextSpan.innerText = mainText;
-        statusSubTextSpan.innerText = subText;
-        
-        // 更新HTTP状态显示（如果状态码存在）
-        if (lastStatusCode !== undefined && lastStatusCode !== null && lastHealthState !== 'checking') {
-            let prefix = '';
-            if (lastStatusCode >= 200 && lastStatusCode < 300) prefix = '✅';
-            else if (lastStatusCode >= 300 && lastStatusCode < 400) prefix = '🔄';
-            else if (lastStatusCode >= 400) prefix = '⚠️';
-            httpStatusSpan.innerHTML = `${prefix} ${lastStatusCode}`;
-        } else if (lastHealthState === 'down' && lastStatusCode === null) {
-            httpStatusSpan.innerHTML = currentLang === 'en' ? '🚫 No response' : '🚫 无响应';
-        }
-        
-        // 更新延迟显示
-        if (lastLatencyMs !== null && lastLatencyMs !== undefined) {
-            if (lastLatencyMs === 'timeout') latencySpan.innerText = currentLang === 'en' ? 'Timeout' : '超时';
-            else latencySpan.innerText = `${lastLatencyMs} ms`;
-        }
-        
-        // 确保图标样式与状态类匹配
-        const iconElem = statusIconDiv.querySelector('i');
-        if (lastHealthState === 'healthy') {
-            iconElem.className = 'fas fa-check-circle';
-        } else if (lastHealthState === 'degraded') {
-            iconElem.className = 'fas fa-exclamation-triangle';
-        } else if (lastHealthState === 'down') {
-            iconElem.className = 'fas fa-times-circle';
-        } else {
-            iconElem.className = 'fas fa-circle-notch fa-spin';
-        }
-        // 更新卡片class
-        const classes = ['healthy', 'degraded', 'down', 'checking'];
-        classes.forEach(cls => statusCardElem.classList.remove(cls));
-        statusCardElem.classList.add(lastHealthState);
-    }
+        let lastHealthState = 'checking';
+        let lastStatusCode = null;
+        let lastLatencyMs = null;
 
-    // 更新UI (健康检测后调用)
-    function updateUIAfterCheck(healthType, statusCode, latencyMs, isTimeout = false) {
-        lastHealthState = healthType;
-        lastStatusCode = statusCode !== undefined ? statusCode : null;
-        lastLatencyMs = latencyMs;
-        refreshStatusTextByLastResult();
-        // 更新延迟额外处理
-        if (isTimeout) {
-            latencySpan.innerText = currentLang === 'en' ? 'Timeout' : '超时';
-            lastLatencyMs = 'timeout';
-        } else if (latencyMs !== undefined && latencyMs !== null) {
-            latencySpan.innerText = `${latencyMs} ms`;
-        }
-        if (statusCode === undefined || statusCode === null) {
-            if (healthType === 'down') httpStatusSpan.innerHTML = currentLang === 'en' ? '🚫 Unreachable' : '🚫 不可达';
-        }
-    }
+        const statusCardElem = document.getElementById('statusCard');
+        const statusIconDiv = document.getElementById('statusIcon');
+        const statusMainTextSpan = document.getElementById('statusMainText');
+        const statusSubTextSpan = document.getElementById('statusSubText');
+        const hostnameSpan = document.getElementById('hostnameValue');
+        const latencySpan = document.getElementById('latencyValue');
+        const httpStatusSpan = document.getElementById('httpStatusValue');
+        const lastCheckSpan = document.getElementById('lastCheckTime');
+        const manualBtn = document.getElementById('manualRefreshBtn');
+        const autoToggleCheck = document.getElementById('autoRefreshToggle');
+        const autoHintSpan = document.getElementById('autoHintSpan');
+        const toastMsgSpan = document.getElementById('toastText');
+        const manualBtnSpan = document.getElementById('manualBtnText');
+        const autoToggleLabelSpan = document.getElementById('autoToggleLabel');
 
-    // 核心健康检查
-    async function performHealthCheck(isManual = false) {
-        if (isChecking) {
-            showMessage('check_ongoing');
-            return false;
+        const labelHostElem = document.getElementById('labelHost');
+        const labelLatencyElem = document.getElementById('labelLatency');
+        const labelHttpStatusElem = document.getElementById('labelHttpStatus');
+        const labelLastCheckElem = document.getElementById('labelLastCheck');
+        const headerTitleElem = document.getElementById('headerTitle');
+
+        const TARGET_ORIGIN = window.location.origin;
+        const HOST_DISPLAY = window.location.hostname || 'localhost';
+        hostnameSpan.innerText = HOST_DISPLAY;
+
+        function showMessage(messageKey, params = {}) {
+            let template = translations[currentLang][messageKey] || messageKey;
+            if (params.code !== undefined) template = template.replace('{code}', params.code);
+            if (params.reason !== undefined) template = template.replace('{reason}', params.reason);
+            toastMsgSpan.innerText = template;
+            setTimeout(() => {
+                if (toastMsgSpan.innerText === template) {
+                    toastMsgSpan.innerText = translations[currentLang].toast_ready;
+                }
+            }, 2500);
         }
-        isChecking = true;
-        // 切换到检测中样式
-        lastHealthState = 'checking';
-        refreshStatusTextByLastResult();
-        const iconElem = statusIconDiv.querySelector('i');
-        iconElem.className = 'fas fa-circle-notch fa-spin';
-        statusCardElem.classList.remove('healthy','degraded','down');
-        statusCardElem.classList.add('checking');
-        latencySpan.innerText = '--- ms';
-        if (isManual) showMessage('toast_checking');
-        
-        const startTime = performance.now();
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 6000);
-        let statusCode = null;
-        let healthType = 'down';
-        let latencyVal = null;
-        let isTimeoutFlag = false;
-        
-        try {
-            const response = await fetch(TARGET_ORIGIN, {
-                method: 'HEAD',
-                cache: 'no-cache',
-                signal: controller.signal,
-                headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
-            });
-            clearTimeout(timeoutId);
-            const endTime = performance.now();
-            latencyVal = Math.round(endTime - startTime);
-            statusCode = response.status;
-            if (response.ok) {
-                healthType = 'healthy';
-                showMessage('toast_success', { code: statusCode });
-            } else if (statusCode >= 300 && statusCode < 400) {
-                healthType = 'degraded';
-                showMessage('toast_redirect', { code: statusCode });
+
+        function updateStaticTexts() {
+            const t = translations[currentLang];
+            headerTitleElem.innerText = t.header;
+            labelHostElem.innerText = t.label_host;
+            labelLatencyElem.innerText = t.label_latency;
+            labelHttpStatusElem.innerText = t.label_http;
+            labelLastCheckElem.innerText = t.label_last;
+            manualBtnSpan.innerText = t.manualBtn;
+            autoToggleLabelSpan.innerText = t.autoLabel;
+            if (autoRefreshEnabled) {
+                autoHintSpan.innerText = t.auto_hint_auto;
             } else {
-                healthType = 'down';
-                showMessage('toast_error', { code: statusCode });
+                autoHintSpan.innerText = t.auto_hint_manual;
             }
-        } catch (err) {
-            clearTimeout(timeoutId);
-            const endTime = performance.now();
-            latencyVal = Math.round(endTime - startTime);
-            if (err.name === 'AbortError') {
-                latencyVal = null;
-                isTimeoutFlag = true;
-                showMessage('toast_fail', { reason: currentLang === 'en' ? 'Timeout' : '请求超时' });
+            refreshStatusTextByLastResult();
+        }
+
+        function refreshStatusTextByLastResult() {
+            if (!lastHealthState) return;
+            const t = translations[currentLang];
+            let mainText = '', subText = '';
+            switch (lastHealthState) {
+                case 'healthy':
+                    mainText = t.healthy_main;
+                    subText = t.healthy_sub;
+                    break;
+                case 'degraded':
+                    mainText = t.degraded_main;
+                    subText = t.degraded_sub;
+                    break;
+                case 'down':
+                    mainText = t.down_main;
+                    subText = t.down_sub;
+                    break;
+                default:
+                    mainText = t.checking_main;
+                    subText = t.checking_sub;
+            }
+            statusMainTextSpan.innerText = mainText;
+            statusSubTextSpan.innerText = subText;
+
+            if (lastStatusCode !== undefined && lastStatusCode !== null && lastHealthState !== 'checking') {
+                let prefix = '';
+                if (lastStatusCode >= 200 && lastStatusCode < 300) prefix = '✅';
+                else if (lastStatusCode >= 300 && lastStatusCode < 400) prefix = '🔄';
+                else if (lastStatusCode >= 400) prefix = '⚠️';
+                httpStatusSpan.innerHTML = `${prefix} ${lastStatusCode}`;
+            } else if (lastHealthState === 'down' && lastStatusCode === null) {
+                httpStatusSpan.innerHTML = currentLang === 'en' ? '🚫 No response' : '🚫 无响应';
+            }
+
+            if (lastLatencyMs !== null && lastLatencyMs !== undefined) {
+                if (lastLatencyMs === 'timeout') {
+                    latencySpan.innerText = currentLang === 'en' ? 'Timeout' : '超时';
+                } else {
+                    latencySpan.innerText = `${lastLatencyMs} ms`;
+                }
+            }
+
+            const iconElem = statusIconDiv.querySelector('i');
+            if (lastHealthState === 'healthy') {
+                iconElem.className = 'fas fa-check-circle';
+            } else if (lastHealthState === 'degraded') {
+                iconElem.className = 'fas fa-exclamation-triangle';
+            } else if (lastHealthState === 'down') {
+                iconElem.className = 'fas fa-times-circle';
             } else {
-                showMessage('toast_fail', { reason: err.message || (currentLang === 'en' ? 'Network error' : '网络错误') });
+                iconElem.className = 'fas fa-circle-notch fa-spin';
             }
-            healthType = 'down';
-            statusCode = null;
-        } finally {
-            const now = new Date();
-            lastCheckSpan.innerText = now.toLocaleTimeString(currentLang === 'en' ? 'en-US' : 'zh-CN', { hour12: false });
-            if (!isTimeoutFlag && latencyVal !== null) {
-                latencySpan.innerText = `${latencyVal} ms`;
-                lastLatencyMs = latencyVal;
-            } else if (isTimeoutFlag) {
+
+            const classes = ['healthy', 'degraded', 'down', 'checking'];
+            classes.forEach(cls => statusCardElem.classList.remove(cls));
+            statusCardElem.classList.add(lastHealthState);
+        }
+
+        function updateUIAfterCheck(healthType, statusCode, latencyMs, isTimeout = false) {
+            lastHealthState = healthType;
+            lastStatusCode = statusCode !== undefined ? statusCode : null;
+            lastLatencyMs = latencyMs;
+            refreshStatusTextByLastResult();
+
+            if (isTimeout) {
                 latencySpan.innerText = currentLang === 'en' ? 'Timeout' : '超时';
                 lastLatencyMs = 'timeout';
+            } else if (latencyMs !== undefined && latencyMs !== null) {
+                latencySpan.innerText = `${latencyMs} ms`;
             }
-            updateUIAfterCheck(healthType, statusCode, latencyVal, isTimeoutFlag);
-            isChecking = false;
-        }
-        return true;
-    }
 
-    // 自动刷新逻辑 (1分钟)
-    function startAutoRefresh() {
-        if (autoTimer) clearInterval(autoTimer);
-        if (autoRefreshEnabled) {
-            autoTimer = setInterval(() => {
-                if (!isChecking && autoRefreshEnabled) {
-                    performHealthCheck(false);
+            if (statusCode === undefined || statusCode === null) {
+                if (healthType === 'down') {
+                    httpStatusSpan.innerHTML = currentLang === 'en' ? '🚫 Unreachable' : '🚫 不可达';
                 }
-            }, 60000); // 1分钟
+            }
         }
-    }
-    function stopAutoRefresh() {
-        if (autoTimer) {
-            clearInterval(autoTimer);
-            autoTimer = null;
-        }
-    }
-    function onAutoToggleChange() {
-        autoRefreshEnabled = autoToggleCheck.checked;
-        if (autoRefreshEnabled) {
-            stopAutoRefresh();
-            startAutoRefresh();
-            autoHintSpan.innerText = translations[currentLang].auto_hint_auto;
-            showMessage('toast_ready');
-        } else {
-            stopAutoRefresh();
-            autoHintSpan.innerText = translations[currentLang].auto_hint_manual;
-            showMessage('toast_ready');
-        }
-    }
 
-    // 手动刷新 (同时重置自动计时器: 如果自动开启则重置间隔)
-    async function handleManualRefresh() {
-        if (isChecking) {
-            showMessage('check_ongoing');
-            return;
+        async function performHealthCheck(isManual = false) {
+            if (isChecking) {
+                showMessage('check_ongoing');
+                return false;
+            }
+            isChecking = true;
+
+            lastHealthState = 'checking';
+            refreshStatusTextByLastResult();
+            const iconElem = statusIconDiv.querySelector('i');
+            iconElem.className = 'fas fa-circle-notch fa-spin';
+            statusCardElem.classList.remove('healthy', 'degraded', 'down');
+            statusCardElem.classList.add('checking');
+            latencySpan.innerText = '--- ms';
+            if (isManual) showMessage('toast_checking');
+
+            const startTime = performance.now();
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 6000);
+            let statusCode = null;
+            let healthType = 'down';
+            let latencyVal = null;
+            let isTimeoutFlag = false;
+
+            try {
+                const response = await fetch(TARGET_ORIGIN, {
+                    method: 'HEAD',
+                    cache: 'no-cache',
+                    signal: controller.signal,
+                    headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+                });
+                clearTimeout(timeoutId);
+                const endTime = performance.now();
+                latencyVal = Math.round(endTime - startTime);
+                statusCode = response.status;
+                if (response.ok) {
+                    healthType = 'healthy';
+                    showMessage('toast_success', { code: statusCode });
+                } else if (statusCode >= 300 && statusCode < 400) {
+                    healthType = 'degraded';
+                    showMessage('toast_redirect', { code: statusCode });
+                } else {
+                    healthType = 'down';
+                    showMessage('toast_error', { code: statusCode });
+                }
+            } catch (err) {
+                clearTimeout(timeoutId);
+                const endTime = performance.now();
+                latencyVal = Math.round(endTime - startTime);
+                if (err.name === 'AbortError') {
+                    latencyVal = null;
+                    isTimeoutFlag = true;
+                    showMessage('toast_fail', { reason: currentLang === 'en' ? 'Timeout' : '请求超时' });
+                } else {
+                    showMessage('toast_fail', { reason: err.message || (currentLang === 'en' ? 'Network error' : '网络错误') });
+                }
+                healthType = 'down';
+                statusCode = null;
+            } finally {
+                const now = new Date();
+                lastCheckSpan.innerText = now.toLocaleTimeString(currentLang === 'en' ? 'en-US' : 'zh-CN', { hour12: false });
+                if (!isTimeoutFlag && latencyVal !== null) {
+                    latencySpan.innerText = `${latencyVal} ms`;
+                    lastLatencyMs = latencyVal;
+                } else if (isTimeoutFlag) {
+                    latencySpan.innerText = currentLang === 'en' ? 'Timeout' : '超时';
+                    lastLatencyMs = 'timeout';
+                }
+                updateUIAfterCheck(healthType, statusCode, latencyVal, isTimeoutFlag);
+                isChecking = false;
+            }
+            return true;
         }
-        // 如果自动模式开启，重新计时使自动刷新周期顺延
-        if (autoRefreshEnabled) {
+
+        function startAutoRefresh() {
+            if (autoTimer) clearInterval(autoTimer);
+            if (autoRefreshEnabled) {
+                autoTimer = setInterval(() => {
+                    if (!isChecking && autoRefreshEnabled) {
+                        performHealthCheck(false);
+                    }
+                }, 60000);
+            }
+        }
+
+        function stopAutoRefresh() {
+            if (autoTimer) {
+                clearInterval(autoTimer);
+                autoTimer = null;
+            }
+        }
+
+        function onAutoToggleChange() {
+            autoRefreshEnabled = autoToggleCheck.checked;
+            if (autoRefreshEnabled) {
+                stopAutoRefresh();
+                startAutoRefresh();
+                autoHintSpan.innerText = translations[currentLang].auto_hint_auto;
+                showMessage('toast_ready');
+            } else {
+                stopAutoRefresh();
+                autoHintSpan.innerText = translations[currentLang].auto_hint_manual;
+                showMessage('toast_ready');
+            }
+        }
+
+        async function handleManualRefresh() {
+            if (isChecking) {
+                showMessage('check_ongoing');
+                return;
+            }
+            if (autoRefreshEnabled) {
+                stopAutoRefresh();
+                startAutoRefresh();
+            }
+            await performHealthCheck(true);
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            updateStaticTexts();
+            refreshStatusTextByLastResult();
+
+            if (lastCheckSpan.innerText !== '--:--:--') {
+                const now = new Date();
+                lastCheckSpan.innerText = now.toLocaleTimeString(currentLang === 'en' ? 'en-US' : 'zh-CN', { hour12: false });
+            }
+
+            if (lastHealthState === 'checking') {
+                statusMainTextSpan.innerText = translations[currentLang].checking_main;
+                statusSubTextSpan.innerText = translations[currentLang].checking_sub;
+            }
+
+            toastMsgSpan.innerText = translations[currentLang].toast_ready;
+            if (autoRefreshEnabled) {
+                autoHintSpan.innerText = translations[currentLang].auto_hint_auto;
+            } else {
+                autoHintSpan.innerText = translations[currentLang].auto_hint_manual;
+            }
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+        }
+
+        async function init() {
+            document.getElementById('langEnBtn').addEventListener('click', () => setLanguage('en'));
+            document.getElementById('langZhBtn').addEventListener('click', () => setLanguage('zh'));
+            manualBtn.addEventListener('click', handleManualRefresh);
+            autoToggleCheck.addEventListener('change', onAutoToggleChange);
+
+            autoRefreshEnabled = false;
+            autoToggleCheck.checked = false;
             stopAutoRefresh();
-            startAutoRefresh();
-        }
-        await performHealthCheck(true);
-    }
 
-    // 切换语言
-    function setLanguage(lang) {
-        currentLang = lang;
-        updateStaticTexts();
-        // 刷新所有动态状态的文本
-        refreshStatusTextByLastResult();
-        // 更新最后检测时间显示的格式保持语言统一风格
-        if (lastCheckSpan.innerText !== '--:--:--') {
-            const now = new Date();
-            lastCheckSpan.innerText = now.toLocaleTimeString(currentLang === 'en' ? 'en-US' : 'zh-CN', { hour12: false });
+            await performHealthCheck(false);
+            setLanguage('en');
+            autoHintSpan.innerText = translations['en'].auto_hint_manual;
         }
-        // 如果正在检测中的状态文本刷新
-        if (lastHealthState === 'checking') {
-            statusMainTextSpan.innerText = translations[currentLang].checking_main;
-            statusSubTextSpan.innerText = translations[currentLang].checking_sub;
-        }
-        // 更新toast初始就绪
-        toastMsgSpan.innerText = translations[currentLang].toast_ready;
-        // 更新自动提示文字
-        if (autoRefreshEnabled) autoHintSpan.innerText = translations[currentLang].auto_hint_auto;
-        else autoHintSpan.innerText = translations[currentLang].auto_hint_manual;
-    }
 
-    // 初始化
-    async function init() {
-        document.getElementById('langEnBtn').addEventListener('click', () => setLanguage('en'));
-        document.getElementById('langZhBtn').addEventListener('click', () => setLanguage('zh'));
-        manualBtn.addEventListener('click', handleManualRefresh);
-        autoToggleCheck.addEventListener('change', onAutoToggleChange);
-        // 默认手动模式, 自动刷新关闭
-        autoRefreshEnabled = false;
-        autoToggleCheck.checked = false;
-        stopAutoRefresh();
-        await performHealthCheck(false);
-        setLanguage('en');  // 默认英文并渲染
-        // 额外检测初始化后自动提示手动模式
-        autoHintSpan.innerText = translations['en'].auto_hint_manual;
-    }
-    init();
-</script>
+        init();
+    </script>
 </body>
 </html>
